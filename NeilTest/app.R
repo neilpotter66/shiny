@@ -18,7 +18,7 @@ ui <- fluidPage(
   titlePanel("Booze Prices", windowTitle = "Booze Prices"),
   sidebarLayout(
     sidebarPanel(
-      sliderInput("priceInput", "Price", min=0, max=100, value=c(20,40), pre="$"),
+      sliderInput("priceInput", "Price", min=0, max=100, value=40, pre="$"),
       radioButtons("typeInput", "Product Type",
                    choices = c("BEER","WINE","SPIRITS"),
                    selected="WINE"),
@@ -39,8 +39,7 @@ ui <- fluidPage(
 server <- function(input, output) {
   output$cooltable <- renderTable({
     filtered <- bcl %>%
-      filter(Price >= input$priceInput[1],
-             Price <= input$priceInput[2],
+      filter(Price >= input$priceInput,
              Type == input$typeInput,
              Country == input$countryInput
              )
@@ -49,8 +48,7 @@ server <- function(input, output) {
   })
   output$coolplot <- renderPlot({
     filtered <- bcl %>%
-      filter(Price >= input$priceInput[1],
-            Price <= input$priceInput[2],
+      filter(Price >= input$priceInput,
              Type == input$typeInput,
              Country == input$countryInput )
     ggplot(filtered, aes(Alcohol_Content)) +
